@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import model.Funcionario;
 import service.FuncionarioService;
@@ -11,62 +12,69 @@ import util.FuncionarioMock;
 
 public class Principal {
 
+    private static final FuncionarioService service = new FuncionarioService();
+    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
     public static void main(String[] args) {
-
-        FuncionarioService service = new FuncionarioService();
-
+        // 3.1 – Inserir todos os funcionários
         List<Funcionario> funcionarios = new ArrayList<>(FuncionarioMock.getFuncionarios());
 
-        // Removendo João
+        //Remover "João"
         funcionarios.removeIf(f -> f.getNome().equalsIgnoreCase("João"));
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        // Imprimir todos os funcionários
+        imprimirRelatorio(funcionarios, "LISTA DE FUNCIONARIOS");
 
-        // Imprimindo
-        System.out.println("--- Funcionários ---");
-        funcionarios.forEach(f ->
-                System.out.println(f.getNome() + " | " +
-                        f.getDataNascimento().format(dtf) + " | " +
-                        nf.format(f.getSalario()) + " | " +
-                        f.getFuncao())
-        );
-
-        // Aumento
+        // Aumento de 10%
         service.aplicarAumento(funcionarios, new BigDecimal("0.10"));
+        System.out.println("\n>>> Aumento de 10% aplicado com sucesso! <<<");
 
-        // Agrupados
-        System.out.println("\n--- Agrupados ---");
-        service.agruparPorFuncao(funcionarios)
-                .forEach((funcao, lista) -> {
-                    System.out.println("Função: " + funcao);
-                    lista.forEach(f -> System.out.println(" - " + f.getNome()));
-                });
+        // Agrupar e imprimir por função
+        imprimirAgrupados(service.agruparPorFuncao(funcionarios));
 
-        // Aniversariantes
-        System.out.println("\n--- Aniversariantes ---");
-        service.aniversariantes(funcionarios)
-                .forEach(f -> System.out.println(f.getNome()));
+        //Aniversariantes dos meses 10 e 12
+        System.out.println("\n--- Aniversariantes (Outubro e Dezembro) ---");
+        service.aniversariantes(funcionarios).forEach(f -> 
+            System.out.printf("Aniversariante: %-15s | Data: %s%n", f.getNome(), f.getDataNascimento().format(dtf)));
 
-        // Mais velho
+        //Maior idade
         Funcionario maisVelho = service.maisVelho(funcionarios);
-        int idade = service.calcularIdade(maisVelho);
-        System.out.println("\nMais velho: " + maisVelho.getNome() + " - " + idade + " anos");
+        System.out.printf("\nFuncionario mais velho: %s | Idade: %d anos%n", 
+            maisVelho.getNome(), service.calcularIdade(maisVelho));
 
         // Ordem alfabética
-        System.out.println("\n--- Ordem Alfabética ---");
-        service.ordenarPorNome(funcionarios)
-                .forEach(f -> System.out.println(f.getNome()));
+        imprimirRelatorio(service.ordenarPorNome(funcionarios), "ORDEM ALFABETICA");
 
-        // Total salários
-        System.out.println("\nTotal salários: " +
-                nf.format(service.calcularTotalSalarios(funcionarios)));
+        //Total dos salários
+        BigDecimal total = service.calcularTotalSalarios(funcionarios);
+        System.out.printf("\nTOTAL DOS SALARIOS: %s%n", nf.format(total));
 
-        // Salários mínimos
-        System.out.println("\n--- Salários mínimos ---");
-        funcionarios.forEach(f ->
-                System.out.println(f.getNome() + ": " +
-                        service.calcularSalariosMinimos(f.getSalario()))
-        );
+        // Quantos salários mínimos ganha cada um
+        imprimirSalariosMinimos(funcionarios);
+    }
+
+    private static void imprimirRelatorio(List<Funcionario> lista, String titulo) {
+        System.out.println("\n=== " + titulo + " ===");
+        System.out.printf("%-20s | %-12s | %-15s | %-15s%n", "NOME", "NASCIMENTO", "SALARIO", "FUNCAO");
+        System.out.println("-".repeat(70));
+        lista.forEach(f -> System.out.printf("%-20s | %-12s | %-15s | %-15s%n", 
+                f.getNome(), f.getDataNascimento().format(dtf), nf.format(f.getSalario()), f.getFuncao()));
+    }
+
+    private static void imprimirAgrupados(Map<String, List<Funcionario>> agrupados) {
+        System.out.println("\n=== FUNCIONARIOS AGRUPADOS POR FUNCAO ===");
+        agrupados.forEach((funcao, lista) -> {
+            System.out.printf("%n[ %s ]%n", funcao.toUpperCase());
+            lista.forEach(f -> System.out.printf("   * %s%n", f.getNome()));
+        });
+    }
+
+    private static void imprimirSalariosMinimos(List<Funcionario> lista) {
+        System.out.println("\n=== QTD DE SALARIOS MINIMOS (R$ 1.212,00) ===");
+        System.out.printf("%-20s | %-10s%n", "NOME", "QTD MIN.");
+        System.out.println("-".repeat(35));
+        lista.forEach(f -> System.out.printf("%-20s | %s%n", 
+                f.getNome(), service.formatarSalariosMinimos(f.getSalario())));
     }
 }

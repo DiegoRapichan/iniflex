@@ -1,87 +1,94 @@
-# Teste Prático - Iniflex
+# Teste Prático - Iniflex (Gestão de Funcionários)
 
-## Descrição
+## 📌 Descrição
 
-Projeto desenvolvido em Java para atender aos requisitos propostos no teste técnico da Iniflex.
-O sistema realiza operações sobre uma lista de funcionários, incluindo manipulação de dados, cálculos e organização das informações.
+Projeto desenvolvido como parte do processo seletivo da Iniflex.
+A aplicação realiza o gerenciamento de funcionários, aplicando regras de negócio como cálculos salariais, agrupamentos e filtros de dados.
 
 ---
 
-## Estrutura do Projeto
+## 🛠️ Tecnologias Utilizadas
 
-O projeto foi organizado seguindo o princípio de separação de responsabilidades:
+- **Java 17 (LTS)** – Utilização de Streams API e recursos modernos da linguagem
+- **Maven** – Gerenciamento de dependências e build
+- **JUnit 5** – Testes unitários para validação das regras de negócio
+- **BigDecimal** – Precisão em cálculos financeiros
 
-```
-src/
+---
+
+## 🧱 Estrutura do Projeto
+
+O projeto foi organizado com separação de responsabilidades:
+
+```id="a1n2k3"
+src/main/java/
  ├── model/      # Entidades (Pessoa, Funcionario)
  ├── service/    # Regras de negócio
  ├── util/       # Mock de dados
- ├── test/       # Testes unitários (JUnit)
- └── Principal.java  # Classe de execução
+ └── Principal   # Classe principal (execução)
+
+src/test/java/
+ └── service/    # Testes unitários
 ```
 
 ---
 
-## Funcionalidades Implementadas
+## ⚙️ Funcionalidades
 
-- ✔ Inserção de funcionários conforme tabela fornecida
-- ✔ Remoção do funcionário "João"
-- ✔ Impressão formatada:
-  - Data no formato `dd/MM/yyyy`
-  - Valores monetários no padrão brasileiro
-
-- ✔ Aplicação de aumento salarial de 10%
-- ✔ Agrupamento de funcionários por função (`Map<String, List<Funcionario>>`)
-- ✔ Listagem de funcionários agrupados por função
-- ✔ Filtro de aniversariantes dos meses 10 e 12
-- ✔ Identificação do funcionário com maior idade
-- ✔ Ordenação alfabética por nome
-- ✔ Cálculo do total dos salários
-- ✔ Cálculo de quantos salários mínimos cada funcionário recebe
+- Inserção dos funcionários conforme especificação
+- Remoção do funcionário “João”
+- Formatação de datas (`dd/MM/yyyy`) e valores monetários (padrão brasileiro)
+- Aplicação de aumento salarial de 10%
+- Agrupamento de funcionários por função
+- Listagem de funcionários agrupados
+- Filtro de aniversariantes (meses 10 e 12)
+- Identificação do funcionário com maior idade
+- Ordenação alfabética
+- Cálculo do total de salários
+- Cálculo de salários mínimos por funcionário
 
 ---
 
-## Testes
+## ▶️ Como Executar
 
-Foram implementados testes unitários utilizando JUnit para validação das principais regras de negócio:
+### Pré-requisitos
+
+- Java 17
+- Maven instalado
+
+### Executar testes
+
+```bash id="run1"
+mvn clean test
+```
+
+### Executar aplicação
+
+```bash id="run2"
+mvn exec:java -Dexec.mainClass="Principal"
+```
+
+---
+
+## 🧪 Testes
+
+Foram implementados testes unitários para validar:
 
 - Aplicação de aumento salarial
 - Cálculo do total de salários
 
 ---
 
-## ▶ Como Executar
+## 💡 Observações
 
-### Pré-requisitos
+O projeto foi estruturado com foco em:
 
-- Java 8 ou superior
-
-### Compilação
-
-```bash
-javac Principal.java
-```
-
-### Execução
-
-```bash
-java Principal
-```
+- Clareza e organização do código
+- Separação de responsabilidades
+- Uso de boas práticas em Java
 
 ---
 
-## Decisões Técnicas
+## 👨‍💻 Autor
 
-- Utilização de `BigDecimal` para operações financeiras, garantindo precisão
-- Uso de `Streams` para operações em coleções
-- Separação da lógica em uma camada de serviço (`FuncionarioService`)
-- Criação de classe utilitária (`FuncionarioMock`) para simular dados
-- Implementação de testes unitários para validar regras críticas
-
----
-
-## Autor
-
-Diego Rapichan
-
----
+Diego Colombari Rapichan
