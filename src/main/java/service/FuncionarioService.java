@@ -1,6 +1,5 @@
 package service;
 
-import model.Funcionario;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -11,6 +10,8 @@ import java.util.List;
 import java.util.Map;       
 import java.util.stream.Collectors;
 
+import model.Funcionario;
+
 
 public class FuncionarioService {
     
@@ -19,7 +20,7 @@ public class FuncionarioService {
 
         funcionarios.forEach(f ->
             f.setSalario(
-                f.getSalario().multiply(fator).setScale(2, BigDecimal.ROUND_HALF_UP)
+                f.getSalario().multiply(fator).setScale(2, RoundingMode.HALF_UP)
             )
         );
     }
