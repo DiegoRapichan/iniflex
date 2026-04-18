@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;       
@@ -54,7 +55,7 @@ public class FuncionarioService {
 
     public BigDecimal calcularTotalSalarios(List<Funcionario> funcionarios){
         return funcionarios.stream()
-            .map(Funcionario::igetSalario)
+            .map(Funcionario::getSalario)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
